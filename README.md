@@ -27,21 +27,21 @@ Installing the xhgui ui
 * You'll need to install mongodb, and php-mongodb, at least version 1.3.0 is required.
 * Point your webserver to folder `web/webroot` 
 * Set the permissions on `web/cache` to allow the webserver to create files.
-  If you're lazy `0777` will work. Run
+  If you're lazy `0766` will work. Run
 
   ```
-  chmod -R 0777 web/cache
+  chmod -R 0766 web/cache
   ```
 
 * If your mongodb setup requires a username + password, or isn't running on the default port + host.
-  You'll need to update `web/config/config.php` so that it can connect to mongod.
+  You'll need to update `web/config/config.php` so that it can connect to mongod. (see comments there fore more help)
+
 * You may wish to add indexes (recommended but optional) to improve the performance, you'll need to do this by using  mongo console
 
-  On your command prompt (irrespective of Windows or \*nix), open mongo shell using command 'mongo' and follow below  commands to add the index:
+  On your command prompt (irrespective of Windows or \*nix), open mongo shell using command 'mongo xhprof' and follow below  commands to add the index:
   
   ```
-  $ mongo
-  > use xhprof
+  $ mongo xhprof
   > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
   > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
   > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
@@ -60,7 +60,7 @@ This file is designed to be combined with PHP's [auto_prepend_file](http://www.p
 
     <VirtualHost *:80>
         php_admin_value auto_prepend_file "/Users/markstory/Sites/xhgui/external/header.php"
-        DocumentRoot "/Users/markstory/Sites/awesome-thing/app/webroot/"
+        DocumentRoot "/Users/markstory/Sites/xhgui/web/webroot/"
         ServerName site.localhost
     </VirtualHost>
 
@@ -68,9 +68,9 @@ With Nginx in fastcgi mode you could use:
 
     server {
         listen 80;
-        server_name site.localhost;
-        root /Users/markstory/Sites/awesome-thing/app/webroot/;
-        fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
+        server_name localhost;
+        root /Users/markstory/Sites/xhgui/web/webroot/;
+        fastcgi_param PHP_VALUE "auto_prepend_file='/Users/markstory/Sites/xhgui/external/header.php'";
      }
 
 Limiting Mongo Disk Usage 
